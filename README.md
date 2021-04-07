@@ -1,24 +1,25 @@
-# securing-the-cloud
+# Next.js example
 
-## Project setup
+## How to use
+
+Download the example [or clone the repo](https://github.com/mui-org/material-ui):
+
+```sh
+curl https://codeload.github.com/mui-org/material-ui/tar.gz/master | tar -xz --strip=2  material-ui-master/examples/nextjs
+cd nextjs
 ```
+
+Install it and run:
+
+```sh
 npm install
+npm run dev
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+or:
 
-### Compiles and minifies for production
-```
-npm run build
-```
+[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/mui-org/material-ui/tree/master/examples/nextjs)
 
-### Lints and fixes files
-```
-npm run lint
-```
+## The idea behind the example
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+[Next.js](https://github.com/zeit/next.js) is a framework for server-rendered React apps.

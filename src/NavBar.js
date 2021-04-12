@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "../src/Link";
 import { signIn, signOut, useSession } from "next-auth/client";
 
 import { makeStyles } from "@material-ui/styles";

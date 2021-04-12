@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "latest",
+    "@material-ui/icons": "^4.11.2",
     "clsx": "latest",
     "next": "latest",
     "next-auth": "^3.14.6",

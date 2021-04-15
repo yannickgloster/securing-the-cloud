@@ -55,7 +55,7 @@ export default function NavBar() {
             className={classes.buttonStyle}
             onClick={() => {
               if (session) signOut();
-              else signIn();
+              else signIn("google");
             }}
           >
             <AccountCircle />

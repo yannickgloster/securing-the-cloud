@@ -13,7 +13,8 @@
     "next-auth": "^3.14.6",
     "prop-types": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "sqlite3": "^5.0.2"
   },
   "scripts": {
     "dev": "next",

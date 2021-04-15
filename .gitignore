@@ -4,6 +4,7 @@
 /node_modules
 
 # misc
+main.sqlite
 .DS_Store
 .env.local
 .env.development.local

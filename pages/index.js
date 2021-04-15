@@ -9,6 +9,7 @@ import { Crypt, RSA } from "hybrid-crypto-js";
 
 import PageLayout from "../src/PageLayout";
 import Copyright from "../src/Copyright";
+import Files from "../src/Files";
 
 export default function Index() {
   const [file, setFile] = useState(null);
@@ -65,6 +66,7 @@ export default function Index() {
       >
         Test Upload
       </Button>
+      <Files />
     </PageLayout>
   );
 }

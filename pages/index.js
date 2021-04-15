@@ -26,7 +26,7 @@ export default function Index() {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      await axios.post("http://localhost:3000/api/FileUpload", formData, {
+      await axios.post("http://localhost:3000/api/FileUploadLocal", formData, {
         headers: {
           "content-type": "multipart/form-data",
         },

@@ -64,7 +64,7 @@ export default async (req, res) => {
             console.error(err);
             return;
           }
-          //file removed
+          // File removed
         });
       });
       res.status(201);

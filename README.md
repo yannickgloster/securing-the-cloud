@@ -1,3 +1,3 @@
 # Securing the Cloud
 
-Upload files to Google Drive securily
+Upload files to Google Drive securely

@@ -8,7 +8,7 @@ export default function PageLayout(props) {
   return (
     <>
       <NavBar />
-      <Container maxWidth="sm" style={{ padding: 5 }}>
+      <Container maxWidth="md" style={{ padding: 5 }}>
         {props.children}
       </Container>
     </>

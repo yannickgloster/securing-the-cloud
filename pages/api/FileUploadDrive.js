@@ -1,27 +1,76 @@
 import jwt from "next-auth/jwt";
+import multer from "multer";
 import axios from "axios";
+import fs from "fs";
 
 const secret = process.env.SECRET;
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+var upload = multer({ storage: storage });
 
 export default async (req, res) => {
   const token = await jwt.getToken({ req, secret });
   if (token) {
-    // Signed in
-    console.log("JSON Web Token", JSON.stringify(token, null, 2));
     try {
-      const res = await axios.post(
-        "https://www.googleapis.com/upload/drive/v3/files?uploadType=media",
-        "test",
-        {
-          headers: {
-            authorization: "Bearer " + token.accessToken,
-            "Content-Type": "text/plain",
+      upload.single("file")(req, {}, async (err) => {
+        // Upload Metadata
+        const metadata = await axios.post(
+          "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable",
+          {
+            name: req.file.originalname,
           },
-        }
-      );
-      console.log(res.data);
+          {
+            headers: {
+              authorization: "Bearer " + token.accessToken,
+              "X-Upload-Content-Type": req.file.mimetype,
+              "X-Upload-Content-Length": req.file.size,
+              "Content-Type": "application/json;charset=UTF-8",
+            },
+          }
+        );
+
+        // Upload files to the metadata location
+        const resp = await axios.post(
+          metadata.headers.location,
+          fs.readFileSync(req.file.path),
+          {
+            headers: {
+              authorization: "Bearer " + token.accessToken,
+              "Content-Type": req.file.mimetype,
+              "Content-Length": req.file.size,
+            },
+          }
+        );
+
+        // Encrypt Files
+
+        // Delete File
+        fs.unlink(req.file.path, (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          //file removed
+        });
+      });
+      res.status(201);
     } catch (e) {
       console.log(e);
+      res.status(401);
     }
   } else {
     // Not Signed in

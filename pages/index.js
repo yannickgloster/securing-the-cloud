@@ -17,16 +17,15 @@ export default function Index() {
   const rsa = new RSA();
 
   const selectFile = (event) => {
-    console.log("hi");
     setFile(event.target.files[0]);
-    console.log(event.target.files[0]);
+    // console.log(event.target.files[0]);
   };
 
   const uploadFile = async () => {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      await axios.post("http://localhost:3000/api/FileUploadLocal", formData, {
+      await axios.post("/api/FileUploadDrive", formData, {
         headers: {
           "content-type": "multipart/form-data",
         },

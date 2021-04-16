@@ -5,6 +5,10 @@ import { makeStyles } from "@material-ui/styles";
 import { AppBar, Toolbar, Typography, Button, Box } from "@material-ui/core";
 import { AccountCircle, CloudCircle, Lock } from "@material-ui/icons/";
 
+import Link from "./Link";
+
+// import Link from "next/link";
+
 const useStyles = makeStyles((theme) => ({
   appBarStyle: {
     width: "100%",
@@ -44,11 +48,13 @@ export default function NavBar() {
             <Lock fontSize="large" color="secondary" />
             <CloudCircle fontSize="large" color="secondary" />
           </Box>
+
           {session && (
             <Typography variant="h6" component="h6">
               {session.user.name}
             </Typography>
           )}
+
           <Button
             color="secondary"
             variant="contained"
@@ -65,6 +71,24 @@ export default function NavBar() {
             >
               {session ? "Logout" : "Login"}
             </Typography>
+          </Button>
+          <Button
+            as={Link}
+            href="/groups"
+            color="secondary"
+            variant="contained"
+            className={classes.buttonStyle}
+          >
+            <Typography className={classes.buttonText}>Groups</Typography>
+          </Button>
+          <Button
+            as={Link}
+            href="/"
+            color="secondary"
+            variant="contained"
+            className={classes.buttonStyle}
+          >
+            <Typography className={classes.buttonText}>My Files</Typography>
           </Button>
         </Box>
       </Toolbar>

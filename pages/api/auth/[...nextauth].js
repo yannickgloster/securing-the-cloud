@@ -3,7 +3,6 @@ import Providers from "next-auth/providers";
 import Adapters from "next-auth/adapters";
 
 import Models from "../../../models";
-import Adapter from "../../../database";
 
 import { Crypt, RSA } from "hybrid-crypto-js";
 

@@ -1,14 +1,21 @@
 import jwt from "next-auth/jwt";
 import axios from "axios";
+import { getSession } from "next-auth/client";
+import { PrismaClient } from "@prisma/client";
 
 const secret = process.env.SECRET;
 
 export default async (req, res) => {
   const token = await jwt.getToken({ req, secret });
+  const session = await getSession({ req });
+
   if (token) {
     try {
       const resp = await axios.get(
-        "https://www.googleapis.com/drive/v3/files",
+        "https://www.googleapis.com/drive/v3/files?q='" +
+          session.user.folderID +
+          "' in parents",
+
         {
           headers: {
             authorization: "Bearer " + token.accessToken,

@@ -60,10 +60,10 @@ export default NextAuth({
     },
     session: async (session, user) => {
       const customSession = session;
-      const userGet = await prisma.user.findUnique({
+      const getUser = await prisma.user.findUnique({
         where: { email: session.user.email },
       });
-      customSession.user.folderID = userGet.folderID;
+      customSession.user.folderID = getUser.folderID;
       customSession.user.id = Number(user.sub);
       return customSession;
     },

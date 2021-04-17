@@ -12,6 +12,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import PageLayout from "../src/PageLayout";
 import GroupsTable from "../src/GroupsTable";
@@ -24,7 +25,7 @@ export default function Groups() {
     setDialog(true);
   };
 
-  const cancelDialog = () => {
+  const closeDialog = () => {
     setGroupName("");
     setDialog(false);
   };
@@ -34,11 +35,10 @@ export default function Groups() {
   };
 
   const addGroup = () => {
-    setDialog(false);
     axios.post("/api/groups/Create", {
       name: groupName,
     });
-    setGroupName("");
+    closeDialog();
   };
 
   return (
@@ -50,16 +50,18 @@ export default function Groups() {
           </Typography>
         </Box>
         <Box>
-          <Fab color="primary" aria-label="add">
-            <AddIcon onClick={openDialog} />
-          </Fab>
+          <Tooltip title="Create New Group" aria-label="create new group">
+            <Fab color="primary">
+              <AddIcon onClick={openDialog} />
+            </Fab>
+          </Tooltip>
         </Box>
       </Box>
       <GroupsTable />
 
       <Dialog
         open={dialog}
-        onClose={cancelDialog}
+        onClose={closeDialog}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">Create Group</DialogTitle>
@@ -78,7 +80,7 @@ export default function Groups() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={cancelDialog} color="primary">
+          <Button onClick={closeDialog} color="primary">
             Cancel
           </Button>
           <Button onClick={addGroup} color="primary">

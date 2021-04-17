@@ -57,7 +57,9 @@ export default function Groups() {
           </Tooltip>
         </Box>
       </Box>
-      <GroupsTable />
+      <GroupsTable
+      // Get this component to update when a new thing is added
+      />
 
       <Dialog
         open={dialog}

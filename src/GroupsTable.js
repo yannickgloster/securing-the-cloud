@@ -22,9 +22,23 @@ import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-import Typography from "@material-ui/core/Typography";
+import Chip from "@material-ui/core/Chip";
+import { signIn, signOut, useSession } from "next-auth/client";
+
+const useStyles = makeStyles((theme) => ({
+  emails: {
+    display: "flex",
+    justifyContent: "flex-start",
+    flexWrap: "wrap",
+    "& > *": {
+      margin: theme.spacing(0.5),
+    },
+  },
+}));
 
 export default function GroupsTable() {
+  const classes = useStyles();
+  const [session, loading] = useSession();
   const [groups, setGroups] = useState([]);
   const [addUser, setAddUser] = useState("");
   const [addUserDialog, setAddUserDialog] = useState(false);
@@ -57,7 +71,7 @@ export default function GroupsTable() {
     } catch (error) {
       console.log(error);
       setErrorStatus(true);
-      setErrorMessage("Error deleting group group.");
+      setErrorMessage("Error deleting group.");
     }
   };
 
@@ -106,6 +120,22 @@ export default function GroupsTable() {
     setErrorMessage(null);
   };
 
+  const removeUser = async (user, group) => {
+    try {
+      const removeUser = await axios.delete("/api/groups/RemoveUser", {
+        data: {
+          user: user,
+          group: group,
+        },
+      });
+      getGroups();
+    } catch (error) {
+      console.log(error);
+      setErrorStatus(true);
+      setErrorMessage("Error removing user.");
+    }
+  };
+
   return (
     <>
       <TableContainer component={Paper}>
@@ -122,7 +152,6 @@ export default function GroupsTable() {
             {groups.map((group) => (
               <TableRow
                 key={group.id}
-
                 // Get onhover vibe
               >
                 <TableCell
@@ -133,16 +162,20 @@ export default function GroupsTable() {
                 >
                   {group.name}
                 </TableCell>
-                <TableCell
-                  align="right"
-                  onClick={() => {
-                    console.log("Clicked " + group.name);
-                  }}
-                >
-                  {group.users.map((user) => (
-                    <Typography variant="body2" gutterBottom>
-                      {user.email}
-                    </Typography>
+                <TableCell align="right" className={classes.emails}>
+                  {group.users.map((user, index) => (
+                    <Chip
+                      key={index}
+                      label={user.email}
+                      onDelete={
+                        session.user.email == user.email
+                          ? null
+                          : () => {
+                              removeUser(user, group);
+                            }
+                      }
+                      color="primary"
+                    />
                   ))}
                 </TableCell>
                 <TableCell component="th" scope="row" padding="checkbox">

@@ -26,8 +26,6 @@ export default async (req, res) => {
         }
       );
 
-      console.log(createFolder);
-
       const createGroup = await prisma.group.create({
         data: {
           name: req.body.name,

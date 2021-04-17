@@ -27,7 +27,6 @@ export default async (req, res) => {
         },
       });
 
-      // console.log(deleteGroup);
       res.status(200);
     } catch (e) {
       // console.log(e);

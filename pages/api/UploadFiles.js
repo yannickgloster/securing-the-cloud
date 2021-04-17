@@ -63,37 +63,6 @@ export default async (req, res) => {
           }
         );
 
-        // Test Sharing
-
-        // const testShare = await axios.post(
-        //   "https://www.googleapis.com/drive/v3/files/" +
-        //     resp.data.id +
-        //     "/permissions",
-        //   {
-        //     role: "writer",
-        //     type: "user",
-        //     emailAddress: "glostery@tcd.ie",
-        //   },
-        //   {
-        //     headers: {
-        //       authorization: "Bearer " + token.accessToken,
-        //     },
-        //   }
-        // );
-
-        // const perms = await axios.get(
-        //   "https://www.googleapis.com/drive/v3/files/" +
-        //     resp.data.id +
-        //     "/permissions",
-        //   {
-        //     headers: {
-        //       authorization: "Bearer " + token.accessToken,
-        //     },
-        //   }
-        // );
-
-        // console.log(perms.data);
-
         // Delete File
         fs.unlink(req.file.path, (err) => {
           if (err) {

@@ -2,9 +2,9 @@ import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import Adapters from "next-auth/adapters";
 
-import { PrismaClient } from "@prisma/client";
+import axios from "axios";
 
-import Models from "../../../models";
+import { PrismaClient } from "@prisma/client";
 
 import { Crypt, RSA } from "hybrid-crypto-js";
 
@@ -19,7 +19,7 @@ export default NextAuth({
       authorizationUrl:
         "https://accounts.google.com/o/oauth2/v2/auth?prompt=consent&access_type=offline&response_type=code",
       scope:
-        "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive.file",
+        "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive",
     }),
   ],
   session: {
@@ -27,25 +27,66 @@ export default NextAuth({
   },
   callbacks: {
     async jwt(token, user, account, profile, isNewUser) {
+      if (isNewUser) {
+        try {
+          const folder = await axios.post(
+            "https://www.googleapis.com/drive/v3/files",
+            {
+              name: "SECURE",
+              mimeType: "application/vnd.google-apps.folder",
+            },
+            {
+              headers: {
+                authorization: "Bearer " + account.accessToken,
+              },
+            }
+          );
+          const test = await prisma.user.update({
+            where: { id: user.id },
+            data: { folderID: folder.data.id },
+          });
+        } catch (error) {
+          console.log(error);
+          console.log("Couldn't create folder");
+        }
+      }
+
       // Add access_token to the token right after signin
       if (account?.accessToken) {
         token.accessToken = account.accessToken;
       }
+
       return token;
     },
-    // Enable debug messages in the console if you are having problems
-    debug: true,
+    session: async (session, user) => {
+      const customSession = session;
+      const userGet = await prisma.user.findUnique({
+        where: { email: session.user.email },
+      });
+      customSession.user.folderID = userGet.folderID;
+      customSession.user.id = user.sub;
+      return customSession;
+    },
   },
 
   events: {
-    async createUser(message) {
-      console.log(message);
-    },
+    async createUser(message) {},
   },
 
-  adapter: Adapters.Prisma.Adapter({ prisma }),
+  adapter: Adapters.Prisma.Adapter({
+    prisma,
+    modelMapping: {
+      User: "user",
+      Account: "account",
+      Session: "session",
+      VerificationRequest: "verificationRequest",
+    },
+  }),
 
   // A database is optional, but required to persist accounts in a database
   // database: process.env.DATABASE_URL,
   secret: process.env.SECRET,
+
+  // Enable debug messages in the console if you are having problems
+  debug: false,
 });

@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "latest",
     "@material-ui/icons": "^4.11.2",
+    "@prisma/client": "^2.21.2",
     "axios": "^0.21.1",
     "clsx": "latest",
     "hybrid-crypto-js": "^0.2.4",
@@ -21,5 +22,8 @@
     "build": "next build",
     "start": "next start",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+  },
+  "devDependencies": {
+    "prisma": "^2.21.2"
   }
 }

@@ -2,9 +2,13 @@ import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import Adapters from "next-auth/adapters";
 
+import { PrismaClient } from "@prisma/client";
+
 import Models from "../../../models";
 
 import { Crypt, RSA } from "hybrid-crypto-js";
+
+const prisma = new PrismaClient();
 
 export default NextAuth({
   // Configure one or more authentication providers
@@ -39,17 +43,7 @@ export default NextAuth({
     },
   },
 
-  adapter: Adapters.TypeORM.Adapter(
-    // The first argument should be a database connection string or TypeORM config object
-    process.env.DATABASE_URL,
-    // The second argument can be used to pass custom models and schemas
-    {
-      models: {
-        Group: Models.Group,
-        GroupUser: Models.GroupUser,
-      },
-    }
-  ),
+  adapter: Adapters.Prisma.Adapter({ prisma }),
 
   // A database is optional, but required to persist accounts in a database
   // database: process.env.DATABASE_URL,

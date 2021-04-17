@@ -24,8 +24,6 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-const prisma = new PrismaClient();
-
 export default async (req, res) => {
   const token = await jwt.getToken({ req, secret });
   const session = await getSession({ req });

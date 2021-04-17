@@ -25,7 +25,7 @@ export default function Index() {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      await axios.post("/api/FileUploadDrive", formData, {
+      await axios.post("/api/UploadFiles", formData, {
         headers: {
           "content-type": "multipart/form-data",
         },

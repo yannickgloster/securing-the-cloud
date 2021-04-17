@@ -41,7 +41,7 @@ export default NextAuth({
               },
             }
           );
-          const test = await prisma.user.update({
+          await prisma.user.update({
             where: { id: user.id },
             data: { folderID: folder.data.id },
           });
@@ -64,7 +64,7 @@ export default NextAuth({
         where: { email: session.user.email },
       });
       customSession.user.folderID = userGet.folderID;
-      customSession.user.id = user.sub;
+      customSession.user.id = Number(user.sub);
       return customSession;
     },
   },

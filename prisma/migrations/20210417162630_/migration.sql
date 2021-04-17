@@ -49,7 +49,8 @@ CREATE TABLE "verification_requests" (
 -- CreateTable
 CREATE TABLE "Group" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "name" TEXT NOT NULL
+    "name" TEXT NOT NULL,
+    "folder_id" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -86,6 +87,9 @@ CREATE UNIQUE INDEX "users.folder_id_unique" ON "users"("folder_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "verification_requests.token_unique" ON "verification_requests"("token");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Group.folder_id_unique" ON "Group"("folder_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_GroupToUser_AB_unique" ON "_GroupToUser"("A", "B");

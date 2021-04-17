@@ -65,7 +65,8 @@ model VerificationRequest {
 }
 
 model Group {
-  id    Int    @id @default(autoincrement())
-  name  String
-  users User[]
+  id       Int    @id @default(autoincrement())
+  name     String
+  folderID String @unique @map(name: "folder_id")
+  users    User[]
 }

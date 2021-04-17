@@ -32,7 +32,8 @@ CREATE TABLE "users" (
     "email_verified" DATETIME,
     "image" TEXT,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "folder_id" TEXT
 );
 
 -- CreateTable
@@ -79,6 +80,9 @@ CREATE UNIQUE INDEX "sessions.access_token_unique" ON "sessions"("access_token")
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users.email_unique" ON "users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users.folder_id_unique" ON "users"("folder_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "verification_requests.token_unique" ON "verification_requests"("token");

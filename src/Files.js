@@ -63,7 +63,7 @@ export default function Files() {
               <TableCell align="right">{file.mimeType}</TableCell>
               <TableCell align="right">No</TableCell>
               <TableCell align="right">None</TableCell>
-              <TableCell component="th" scope="row">
+              <TableCell component="th" scope="row" padding="checkbox">
                 <IconButton onClick={() => deleteFile(file.id)}>
                   <DeleteIcon />
                 </IconButton>

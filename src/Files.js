@@ -53,7 +53,6 @@ export default function Files(props) {
             <TableCell align="right">Name</TableCell>
             <TableCell align="right">Type</TableCell>
             <TableCell align="right">Encrypted</TableCell>
-            <TableCell align="right">Group</TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -66,7 +65,6 @@ export default function Files(props) {
               <TableCell align="right">{file.name}</TableCell>
               <TableCell align="right">{file.mimeType}</TableCell>
               <TableCell align="right">No</TableCell>
-              <TableCell align="right">None</TableCell>
               <TableCell component="th" scope="row" padding="checkbox">
                 <IconButton onClick={() => deleteFile(file.id)}>
                   <DeleteIcon />

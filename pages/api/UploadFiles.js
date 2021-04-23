@@ -3,6 +3,7 @@ import multer from "multer";
 import axios from "axios";
 import fs from "fs";
 import { getSession } from "next-auth/client";
+import { PrismaClient } from "@prisma/client";
 
 const secret = process.env.SECRET;
 
@@ -23,21 +24,29 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
+const prisma = new PrismaClient();
+
 export default async (req, res) => {
   const token = await jwt.getToken({ req, secret });
   const session = await getSession({ req });
 
-  if (token) {
+  const group = await prisma.group.findUnique({
+    where: { id: parseInt(req.headers.groupid) },
+    include: {
+      users: true,
+    },
+  });
+
+  if (token && group.users.some((e) => e.id == session.user.id)) {
     try {
       upload.single("file")(req, {}, async (err) => {
         // Encrypt Files
-
         // Upload Metadata
         const metadata = await axios.post(
           "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable",
           {
             name: req.file.originalname,
-            parents: [session.user.folderID],
+            parents: [group.folderID],
           },
           {
             headers: {
@@ -48,7 +57,6 @@ export default async (req, res) => {
             },
           }
         );
-
         // Upload files to the metadata location
         const resp = await axios.post(
           metadata.headers.location,
@@ -61,7 +69,6 @@ export default async (req, res) => {
             },
           }
         );
-
         // Delete File
         fs.unlink(req.file.path, (err) => {
           if (err) {

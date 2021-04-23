@@ -16,10 +16,7 @@ import IconButton from "@material-ui/core/IconButton";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import { Crypt, RSA } from "hybrid-crypto-js";
-
 import PageLayout from "../../src/PageLayout";
-import Copyright from "../../src/Copyright";
 
 const group = () => {
   const router = useRouter();
@@ -28,7 +25,6 @@ const group = () => {
   const [files, setFiles] = useState([]);
   const [groupName, setGroupName] = useState(null);
   const [session, loading] = useSession();
-  const rsa = new RSA();
 
   useEffect(() => {
     const interval = setInterval(getFiles, 1000);
@@ -67,19 +63,12 @@ const group = () => {
       await axios.post("/api/UploadFiles", formData, {
         headers: {
           "content-type": "multipart/form-data",
+          groupID: groupID,
         },
       });
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const generateKeyPair = () => {
-    rsa.generateKeyPair(function (keyPair) {
-      // Callback function receives new key pair as a first argument
-      var publicKey = keyPair.publicKey;
-      var privateKey = keyPair.privateKey;
-    });
   };
 
   return (

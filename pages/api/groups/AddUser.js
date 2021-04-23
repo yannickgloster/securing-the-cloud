@@ -12,11 +12,9 @@ export default async (req, res) => {
 
   if (token) {
     try {
-      console.log(req.body);
       const getUser = await prisma.user.findUnique({
         where: { email: req.body.userEmail },
       });
-      console.log(getUser);
       if (getUser != null) {
         const shareDrive = await axios.post(
           "https://www.googleapis.com/drive/v3/files/" +

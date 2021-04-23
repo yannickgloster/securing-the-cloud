@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { signIn, signOut, useSession } from "next-auth/client";
 import axios from "axios";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -23,7 +24,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import Chip from "@material-ui/core/Chip";
-import { signIn, signOut, useSession } from "next-auth/client";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+
+import Link from "../src/Link";
 
 const useStyles = makeStyles((theme) => ({
   emails: {
@@ -53,7 +56,6 @@ export default function GroupsTable() {
   const getGroups = async () => {
     try {
       const groupsReq = await axios.get("/api/groups/GetAll");
-      console.log(groupsReq);
       setGroups(groupsReq.data);
     } catch (error) {
       console.log(error);
@@ -145,6 +147,7 @@ export default function GroupsTable() {
               <TableCell align="right">Users</TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -205,6 +208,13 @@ export default function GroupsTable() {
                       }
                     >
                       <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+                <TableCell component="th" scope="row" padding="checkbox">
+                  <Tooltip title="View" aria-label="view">
+                    <IconButton as={Link} href={"/group/" + group.id}>
+                      <VisibilityIcon />
                     </IconButton>
                   </Tooltip>
                 </TableCell>

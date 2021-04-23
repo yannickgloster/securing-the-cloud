@@ -13,17 +13,21 @@ import IconButton from "@material-ui/core/IconButton";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-export default function Files() {
+export default function Files(props) {
   const [files, setFiles] = useState([]);
+  const groupID = props.groupID;
 
   useEffect(() => {
+    getFiles();
     const interval = setInterval(getFiles, 1000);
     return () => clearInterval(interval);
   }, []);
 
   const getFiles = async () => {
     try {
-      const filesReq = await axios.get("/api/GetFiles");
+      const path = "/api/GetFiles/" + groupID;
+      console.log(path);
+      const filesReq = await axios.get(path);
       setFiles(filesReq.data);
     } catch (error) {
       console.log(error);

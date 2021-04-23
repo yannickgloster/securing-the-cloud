@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import axios from "axios";
 
 import { signIn, signOut, useSession } from "next-auth/client";
@@ -7,18 +8,19 @@ import Button from "@material-ui/core/Button";
 
 import { Crypt, RSA } from "hybrid-crypto-js";
 
-import PageLayout from "../src/PageLayout";
-import Copyright from "../src/Copyright";
-import Files from "../src/Files";
+import PageLayout from "../../src/PageLayout";
+import Copyright from "../../src/Copyright";
+import Files from "../../src/Files";
 
-export default function Files() {
+const GroupFiles = () => {
+  const router = useRouter();
+  const { groupID } = router.query;
   const [file, setFile] = useState(null);
   const [session, loading] = useSession();
   const rsa = new RSA();
 
   const selectFile = (event) => {
     setFile(event.target.files[0]);
-    // console.log(event.target.files[0]);
   };
 
   const uploadFile = async () => {
@@ -65,7 +67,9 @@ export default function Files() {
       >
         Test Upload
       </Button>
-      <Files />
+      <Files groupID={groupID} />
     </PageLayout>
   );
-}
+};
+
+export default GroupFiles;

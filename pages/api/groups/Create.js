@@ -6,14 +6,7 @@ import { Crypt, RSA } from "hybrid-crypto-js";
 
 const secret = process.env.SECRET;
 const rsa = new RSA();
-
-const generateKeyPair = () => {
-  rsa.generateKeyPair(function (keyPair) {
-    // Callback function receives new key pair as a first argument
-    var publicKey = keyPair.publicKey;
-    var privateKey = keyPair.privateKey;
-  });
-};
+const crypt = new Crypt();
 
 const prisma = new PrismaClient();
 
@@ -37,21 +30,45 @@ export default async (req, res) => {
         }
       );
 
-      const createGroup = await prisma.group.create({
-        data: {
-          name: req.body.name,
-          folderID: createFolder.data.id,
-          owner: {
-            connect: {
-              id: session.user.id,
+      rsa.generateKeyPair(async function (keyPair) {
+        // Create group and store private key in group
+        const createGroup = await prisma.group.create({
+          data: {
+            name: req.body.name,
+            folderID: createFolder.data.id,
+            publicKey: keyPair.publicKey,
+            owner: {
+              connect: {
+                id: session.user.id,
+              },
+            },
+            users: {
+              connect: {
+                id: session.user.id,
+              },
             },
           },
-          users: {
-            connect: {
-              id: session.user.id,
+        });
+
+        // Encrypt the group private key with the user's public key and store the group's encrypted private key with the user
+        const storeGroupPrivateKey = await prisma.groupPrivateKey.create({
+          data: {
+            encryptedPrivateKey: crypt.encrypt(
+              session.user.publicKey,
+              keyPair.privateKey
+            ),
+            group: {
+              connect: {
+                id: createGroup.id,
+              },
+            },
+            user: {
+              connect: {
+                id: session.user.id,
+              },
             },
           },
-        },
+        });
       });
 
       res.status(200);

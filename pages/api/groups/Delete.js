@@ -19,6 +19,10 @@ export default async (req, res) => {
         }
       );
 
+      const deleteGroupPrivateKeys = await prisma.groupPrivateKey.deleteMany({
+        where: { groupId: req.body.id },
+      });
+
       const deleteGroup = await prisma.group.delete({
         where: {
           id: req.body.id,
@@ -27,7 +31,7 @@ export default async (req, res) => {
 
       res.status(200);
     } catch (e) {
-      // console.log(e);
+      console.log(e);
       res.status(401);
     }
   } else {

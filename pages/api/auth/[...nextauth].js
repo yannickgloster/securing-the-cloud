@@ -9,6 +9,7 @@ import { PrismaClient } from "@prisma/client";
 import { Crypt, RSA } from "hybrid-crypto-js";
 
 const prisma = new PrismaClient();
+const rsa = new RSA();
 
 export default NextAuth({
   // Configure one or more authentication providers
@@ -16,8 +17,8 @@ export default NextAuth({
     Providers.Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      authorizationUrl:
-        "https://accounts.google.com/o/oauth2/v2/auth?prompt=consent&access_type=offline&response_type=code",
+      // authorizationUrl:
+      //   "https://accounts.google.com/o/oauth2/v2/auth?prompt=consent&access_type=offline&response_type=code",
       scope:
         "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive",
     }),
@@ -41,9 +42,15 @@ export default NextAuth({
               },
             }
           );
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { folderID: folder.data.id },
+          rsa.generateKeyPair(async function (keyPair) {
+            await prisma.user.update({
+              where: { id: user.id },
+              data: {
+                folderID: folder.data.id,
+                publicKey: keyPair.publicKey,
+                privateKey: keyPair.privateKey,
+              },
+            });
           });
         } catch (error) {
           console.log(error);
@@ -64,6 +71,7 @@ export default NextAuth({
         where: { email: session.user.email },
       });
       customSession.user.folderID = getUser.folderID;
+      customSession.user.publicKey = getUser.publicKey;
       customSession.user.id = Number(user.sub);
       return customSession;
     },

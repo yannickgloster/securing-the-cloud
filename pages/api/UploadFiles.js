@@ -4,6 +4,7 @@ import axios from "axios";
 import fs from "fs";
 import { getSession } from "next-auth/client";
 import { PrismaClient } from "@prisma/client";
+import { Crypt, RSA } from "hybrid-crypto-js";
 
 const secret = process.env.SECRET;
 
@@ -25,6 +26,8 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 const prisma = new PrismaClient();
+const rsa = new RSA();
+const crypt = new Crypt();
 
 export default async (req, res) => {
   const token = await jwt.getToken({ req, secret });
@@ -41,6 +44,7 @@ export default async (req, res) => {
     try {
       upload.single("file")(req, {}, async (err) => {
         // Encrypt Files
+
         // Upload Metadata
         const metadata = await axios.post(
           "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable",

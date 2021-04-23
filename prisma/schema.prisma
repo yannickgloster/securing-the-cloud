@@ -20,7 +20,6 @@ model Account {
   createdAt          DateTime  @default(now()) @map(name: "created_at")
   updatedAt          DateTime  @default(now()) @map(name: "updated_at")
 
-
   @@index([providerAccountId], name: "providerAccountId")
   @@index([providerId], name: "providerId")
   @@index([userId], name: "userId")
@@ -48,6 +47,11 @@ model User {
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
 
+  publicKey  String?
+  privateKey String?
+
+  groupKeys GroupPrivateKey[]
+
   groups   Group[]
   folderID String? @unique @map(name: "folder_id")
   Group    Group[] @relation("UserOwner")
@@ -66,10 +70,22 @@ model VerificationRequest {
 }
 
 model Group {
-  id       Int    @id @default(autoincrement())
-  name     String
-  folderID String @unique @map(name: "folder_id")
-  users    User[]
-  owner    User   @relation(name: "UserOwner", fields: [ownerId], references: [id])
-  ownerId  Int
+  id              Int               @id @default(autoincrement())
+  name            String
+  folderID        String            @unique @map(name: "folder_id")
+  publicKey       String
+  users           User[]
+  owner           User              @relation(name: "UserOwner", fields: [ownerId], references: [id])
+  ownerId         Int
+  GroupPrivateKey GroupPrivateKey[]
+}
+
+model GroupPrivateKey {
+  encryptedPrivateKey String
+  group               Group  @relation(fields: [groupId], references: [id])
+  groupId             Int
+  user                User   @relation(fields: [userId], references: [id])
+  userId              Int
+
+  @@id([groupId, userId])
 }

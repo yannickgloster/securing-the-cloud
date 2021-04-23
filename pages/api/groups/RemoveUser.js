@@ -39,6 +39,7 @@ export default async (req, res) => {
         }
       );
 
+      // Remove user from group table
       await prisma.group.update({
         where: { id: req.body.group.id },
         data: {
@@ -46,6 +47,16 @@ export default async (req, res) => {
             disconnect: {
               id: req.body.user.id,
             },
+          },
+        },
+      });
+
+      // Remove group private key access
+      await prisma.groupPrivateKey.delete({
+        where: {
+          groupId_userId: {
+            groupId: req.body.group.id,
+            userId: req.body.user.id,
           },
         },
       });

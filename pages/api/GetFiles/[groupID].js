@@ -4,14 +4,13 @@ import { getSession } from "next-auth/client";
 import { PrismaClient } from "@prisma/client";
 
 const secret = process.env.SECRET;
+const prisma = new PrismaClient();
 
 export default async (req, res) => {
   const token = await jwt.getToken({ req, secret });
   const session = await getSession({ req });
-  const prisma = new PrismaClient();
   const { groupID } = req.query;
 
-  // console.log(req.query);
   const group = await prisma.group.findUnique({
     where: { id: parseInt(groupID) },
     include: {

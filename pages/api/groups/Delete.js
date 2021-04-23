@@ -3,10 +3,10 @@ import axios from "axios";
 import { PrismaClient } from "@prisma/client";
 
 const secret = process.env.SECRET;
+const prisma = new PrismaClient();
 
 export default async (req, res) => {
   const token = await jwt.getToken({ req, secret });
-  const prisma = new PrismaClient();
 
   if (token) {
     try {

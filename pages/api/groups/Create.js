@@ -2,13 +2,24 @@ import jwt from "next-auth/jwt";
 import axios from "axios";
 import { getSession } from "next-auth/client";
 import { PrismaClient } from "@prisma/client";
+import { Crypt, RSA } from "hybrid-crypto-js";
 
 const secret = process.env.SECRET;
+const rsa = new RSA();
+
+const generateKeyPair = () => {
+  rsa.generateKeyPair(function (keyPair) {
+    // Callback function receives new key pair as a first argument
+    var publicKey = keyPair.publicKey;
+    var privateKey = keyPair.privateKey;
+  });
+};
+
+const prisma = new PrismaClient();
 
 export default async (req, res) => {
   const token = await jwt.getToken({ req, secret });
   const session = await getSession({ req });
-  const prisma = new PrismaClient();
 
   if (token) {
     try {

@@ -11,14 +11,19 @@ export default async (req, res) => {
   const prisma = new PrismaClient();
   const { groupID } = req.query;
 
-  if (token) {
+  // console.log(req.query);
+  const group = await prisma.group.findUnique({
+    where: { id: parseInt(groupID) },
+    include: {
+      users: true,
+    },
+  });
+
+  if (token && group.users.some((e) => e.id == session.user.id)) {
     try {
-      const getGroup = await prisma.group.findUnique({
-        where: { id: parseInt(groupID) },
-      });
       const resp = await axios.get(
         "https://www.googleapis.com/drive/v3/files?q='" +
-          getGroup.folderID +
+          group.folderID +
           "' in parents",
         {
           headers: {
@@ -27,9 +32,9 @@ export default async (req, res) => {
         }
       );
 
-      res.status(200).json(resp.data.files);
+      res.status(200).json({ name: group.name, files: resp.data.files });
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       res.status(401);
     }
   } else {

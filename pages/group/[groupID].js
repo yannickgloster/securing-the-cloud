@@ -15,6 +15,7 @@ import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import DeleteIcon from "@material-ui/icons/Delete";
+import GetAppIcon from "@material-ui/icons/GetApp";
 
 import PageLayout from "../../src/PageLayout";
 
@@ -47,6 +48,14 @@ const group = () => {
       const filesReq = await axios.delete("/api/DeleteFile", {
         data: { id: id },
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const downloadFile = async (id) => {
+    try {
+      const downloadFile = await axios.get("/api/download/" + id);
     } catch (error) {
       console.log(error);
     }
@@ -105,6 +114,7 @@ const group = () => {
               <TableCell align="right">Type</TableCell>
               <TableCell align="right">Encrypted</TableCell>
               <TableCell></TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -119,6 +129,15 @@ const group = () => {
                 <TableCell component="th" scope="row" padding="checkbox">
                   <IconButton onClick={() => deleteFile(file.id)}>
                     <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+                <TableCell component="th" scope="row" padding="checkbox">
+                  <IconButton
+                    onClick={() => {
+                      downloadFile(file.id);
+                    }}
+                  >
+                    <GetAppIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>

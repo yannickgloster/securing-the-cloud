@@ -3,7 +3,6 @@ import multer from "multer";
 import axios from "axios";
 import fs from "fs";
 import { getSession } from "next-auth/client";
-import { PrismaClient } from "@prisma/client";
 
 const secret = process.env.SECRET;
 

@@ -12,7 +12,7 @@ export default async (req, res) => {
     try {
       const resp = await axios.get(
         "https://www.googleapis.com/drive/v3/files?q='" +
-          session.user.folderID +
+          req.body.folderID +
           "' in parents",
 
         {
@@ -27,6 +27,7 @@ export default async (req, res) => {
       // console.log(e);
       res.status(401);
     }
+    ``;
   } else {
     // Not Signed in
     res.status(401);

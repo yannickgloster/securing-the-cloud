@@ -30,6 +30,11 @@ export default async (req, res) => {
         data: {
           name: req.body.name,
           folderID: createFolder.data.id,
+          owner: {
+            connect: {
+              id: session.user.id,
+            },
+          },
           users: {
             connect: {
               id: session.user.id,

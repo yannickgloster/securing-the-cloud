@@ -15,7 +15,7 @@ export default async (req, res) => {
       const allGroups = await prisma.user.findUnique({
         where: { id: session.user.id },
         include: {
-          groups: { include: { users: true } },
+          groups: { include: { users: true, owner: true } },
         },
       });
 

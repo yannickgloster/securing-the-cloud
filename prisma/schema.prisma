@@ -50,6 +50,7 @@ model User {
 
   groups   Group[]
   folderID String? @unique @map(name: "folder_id")
+  Group    Group[] @relation("UserOwner")
   @@map(name: "users")
 }
 
@@ -69,4 +70,6 @@ model Group {
   name     String
   folderID String @unique @map(name: "folder_id")
   users    User[]
+  owner    User   @relation(name: "UserOwner", fields: [ownerId], references: [id])
+  ownerId  Int
 }

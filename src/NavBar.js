@@ -88,7 +88,7 @@ export default function NavBar() {
             variant="contained"
             className={classes.buttonStyle}
           >
-            <Typography className={classes.buttonText}>My Files</Typography>
+            <Typography className={classes.buttonText}>Home</Typography>
           </Button>
         </Box>
       </Toolbar>

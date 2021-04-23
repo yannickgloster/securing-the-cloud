@@ -117,7 +117,6 @@ export default function GroupsTable() {
       return;
     }
     setErrorStatus(false);
-    setErrorMessage(null);
   };
 
   const removeUser = async (user, group) => {
@@ -168,7 +167,7 @@ export default function GroupsTable() {
                       key={index}
                       label={user.email}
                       onDelete={
-                        session.user.email == user.email
+                        group.owner.id == user.id
                           ? null
                           : () => {
                               removeUser(user, group);

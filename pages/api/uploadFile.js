@@ -79,7 +79,6 @@ export default async (req, res) => {
 
         const file = fs.readFileSync(req.file.path).toString("hex");
         const signature = crypt.signature(privateKeyDecrypted.message, file);
-
         const encryptedFile = crypt.encrypt(group.publicKey, file, signature);
         const encryptedFileBuffer = Buffer.from(encryptedFile);
 

@@ -80,7 +80,7 @@ export default async (req, res) => {
         file.data.on("end", resolve);
       });
 
-      res.send("stage2");
+      res.send("stage3");
 
       const encryptedFile = fs.readFileSync(downloadPath);
 

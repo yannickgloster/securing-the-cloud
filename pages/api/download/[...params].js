@@ -51,8 +51,6 @@ export default async (req, res) => {
         getPrivateKey.encryptedPrivateKey
       );
 
-      res.send("stage1");
-
       const fileInfo = await axios.get(
         "https://www.googleapis.com/drive/v3/files/" + fileID,
         {
@@ -81,6 +79,8 @@ export default async (req, res) => {
         file.data.pipe(location);
         file.data.on("end", resolve);
       });
+
+      res.send("stage2");
 
       const encryptedFile = fs.readFileSync(downloadPath);
 

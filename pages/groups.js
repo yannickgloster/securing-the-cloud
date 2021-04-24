@@ -20,9 +20,6 @@ import GroupsTable from "../src/GroupsTable";
 export default function Groups() {
   const [dialog, setDialog] = useState(false);
   const [groupName, setGroupName] = useState("");
-  const [updated, setUpdated] = useState(false);
-
-  useEffect(() => {}, [updated]);
 
   const openDialog = () => {
     setDialog(true);
@@ -42,10 +39,8 @@ export default function Groups() {
       await axios.post("/api/groups/create", {
         name: groupName,
       });
-      setUpdated(!updated);
+      closeDialog();
     } catch (e) {}
-
-    closeDialog();
   };
 
   return (

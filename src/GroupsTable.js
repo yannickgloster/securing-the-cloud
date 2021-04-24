@@ -25,6 +25,8 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import Chip from "@material-ui/core/Chip";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Box from "@material-ui/core/Box";
 
 import Link from "../src/Link";
 
@@ -48,19 +50,23 @@ export default function GroupsTable() {
   const [groupSelected, setGroupSelected] = useState(null);
   const [errorStatus, setErrorStatus] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    getGroups();
+    const interval = setInterval(getGroups, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   const getGroups = async () => {
     try {
       const groupsReq = await axios.get("/api/groups/all");
       setGroups(groupsReq.data);
+      setLoaded(true);
     } catch (error) {
       console.log(error);
       setErrorStatus(true);
       setErrorMessage("Error getting groups.");
+      setLoaded(false);
     }
   };
 
@@ -136,93 +142,98 @@ export default function GroupsTable() {
       setErrorMessage("Error removing user.");
     }
   };
-
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table aria-label="Groups">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Name</TableCell>
-              <TableCell align="right">Users</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {groups.map((group) => (
-              <TableRow
-                key={group.id}
-                // Get onhover vibe
-              >
-                <TableCell
-                  align="left"
-                  onClick={() => {
-                    console.log("Clicked " + group.name);
-                  }}
-                >
-                  {group.name}
-                </TableCell>
-                <TableCell align="right" className={classes.emails}>
-                  {group.users.map((user, index) => (
-                    <Chip
-                      key={index}
-                      label={user.email}
-                      onDelete={
-                        group.owner.id == user.id
-                          ? null
-                          : () => {
-                              removeUser(user, group);
-                            }
-                      }
-                      color="primary"
-                    />
-                  ))}
-                </TableCell>
-                <TableCell component="th" scope="row" padding="checkbox">
-                  <Tooltip
-                    title="Add User to Group"
-                    aria-label="add user to group"
-                  >
-                    <IconButton
-                      onClick={() =>
-                        openAddUserDialog({
-                          id: group.id,
-                          folderID: group.folderID,
-                        })
-                      }
-                    >
-                      <AddIcon />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
-                <TableCell component="th" scope="row" padding="checkbox">
-                  <Tooltip title="Delete" aria-label="delete">
-                    <IconButton
-                      onClick={() =>
-                        deleteGroup({
-                          id: group.id,
-                          folderID: group.folderID,
-                        })
-                      }
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
-                <TableCell component="th" scope="row" padding="checkbox">
-                  <Tooltip title="View" aria-label="view">
-                    <IconButton as={Link} href={"/group/" + group.id}>
-                      <VisibilityIcon />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
+      {!loaded && (
+        <Box display="flex" alignItems="center" justifyContent="center">
+          <Box paddingTop={5}>
+            <CircularProgress />
+          </Box>
+        </Box>
+      )}
+      {loaded && (
+        <TableContainer component={Paper}>
+          <Table aria-label="Groups">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">Name</TableCell>
+                <TableCell align="right">Users</TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {groups.map((group) => (
+                <TableRow key={group.id}>
+                  <TableCell
+                    align="left"
+                    onClick={() => {
+                      console.log("Clicked " + group.name);
+                    }}
+                  >
+                    {group.name}
+                  </TableCell>
+                  <TableCell align="right" className={classes.emails}>
+                    {group.users.map((user, index) => (
+                      <Chip
+                        key={index}
+                        label={user.email}
+                        onDelete={
+                          group.owner.id == user.id
+                            ? null
+                            : () => {
+                                removeUser(user, group);
+                              }
+                        }
+                        color="primary"
+                      />
+                    ))}
+                  </TableCell>
+                  <TableCell component="th" scope="row" padding="checkbox">
+                    <Tooltip
+                      title="Add User to Group"
+                      aria-label="add user to group"
+                    >
+                      <IconButton
+                        onClick={() =>
+                          openAddUserDialog({
+                            id: group.id,
+                            folderID: group.folderID,
+                          })
+                        }
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell component="th" scope="row" padding="checkbox">
+                    <Tooltip title="Delete" aria-label="delete">
+                      <IconButton
+                        onClick={() =>
+                          deleteGroup({
+                            id: group.id,
+                            folderID: group.folderID,
+                          })
+                        }
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell component="th" scope="row" padding="checkbox">
+                    <Tooltip title="View" aria-label="view">
+                      <IconButton as={Link} href={"/group/" + group.id}>
+                        <VisibilityIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
       <Dialog
         open={addUserDialog}
         onClose={closeAddUser}

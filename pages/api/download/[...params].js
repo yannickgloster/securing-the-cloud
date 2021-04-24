@@ -11,12 +11,6 @@ const rsa = new RSA();
 const crypt = new Crypt();
 const prisma = new PrismaClient();
 
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
-
 export default async (req, res) => {
   const token = await jwt.getToken({ req, secret });
   const session = await getSession({ req });
@@ -68,10 +62,10 @@ export default async (req, res) => {
           responseType: "stream",
         }
       );
-      file.data.pipe(location);
-
-      // Please fix this you stupid
-      await sleep(1000);
+      await new Promise(function (resolve) {
+        file.data.pipe(location);
+        file.data.on("end", resolve);
+      });
 
       const encryptedFile = fs.readFileSync(downloadPath);
 

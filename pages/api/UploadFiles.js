@@ -44,6 +44,12 @@ export default async (req, res) => {
     try {
       upload.single("file")(req, {}, async (err) => {
         // Encrypt Files
+        const file = fs.readFileSync(req.file.path);
+        const encryptedFile = crypt.encrypt(
+          group.publicKey,
+          file.toString("hex")
+        );
+        const encryptedFileBuffer = Buffer.from(encryptedFile);
 
         // Upload Metadata
         const metadata = await axios.post(
@@ -55,24 +61,26 @@ export default async (req, res) => {
           {
             headers: {
               authorization: "Bearer " + token.accessToken,
-              "X-Upload-Content-Type": req.file.mimetype,
-              "X-Upload-Content-Length": req.file.size,
+              "X-Upload-Content-Type": "application/octet-stream",
+              "X-Upload-Content-Length": encryptedFileBuffer.byteLength,
               "Content-Type": "application/json;charset=UTF-8",
             },
           }
         );
+
         // Upload files to the metadata location
         const resp = await axios.post(
           metadata.headers.location,
-          fs.readFileSync(req.file.path),
+          encryptedFileBuffer,
           {
             headers: {
               authorization: "Bearer " + token.accessToken,
-              "Content-Type": req.file.mimetype,
-              "Content-Length": req.file.size,
+              "Content-Type": "application/octet-stream",
+              "Content-Length": encryptedFileBuffer.byteLength,
             },
           }
         );
+
         // Delete File
         fs.unlink(req.file.path, (err) => {
           if (err) {

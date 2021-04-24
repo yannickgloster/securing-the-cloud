@@ -55,7 +55,7 @@ const group = () => {
 
   const downloadFile = async (id) => {
     try {
-      const downloadFile = await axios.get("/api/download/" + id);
+      const downloadFile = await axios.get("/api/download/" + groupID + "/" + id);
     } catch (error) {
       console.log(error);
     }

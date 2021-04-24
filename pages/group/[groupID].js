@@ -51,8 +51,8 @@ const group = () => {
       if (firstLoad) setFirstLoad(false);
     } catch (error) {
       console.log(error);
-      setErrorStatus(true);
-      setErrorMessage("Error getting files.");
+      // setErrorStatus(true);
+      // setErrorMessage("Error getting files.");
     }
   };
 
@@ -86,7 +86,6 @@ const group = () => {
 
   const selectFile = (event) => {
     setFile(event.target.files[0]);
-    console.log(event.target.files[0]);
   };
 
   const uploadFile = async () => {

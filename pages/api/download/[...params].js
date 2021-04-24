@@ -110,7 +110,7 @@ export default async (req, res) => {
           // File removed
         });
 
-        res.status(400);
+        res.status(401);
       } else {
         const decryptedFilePath = path.join(os.tmpdir(), fileInfo.data.name);
 
@@ -143,7 +143,7 @@ export default async (req, res) => {
       }
     } catch (e) {
       console.log(e);
-      res.status(401);
+      res.status(401).json(e);
     }
   } else {
     // Not Signed in

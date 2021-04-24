@@ -80,8 +80,6 @@ export default async (req, res) => {
         file.data.on("end", resolve);
       });
 
-      res.send("stage3");
-
       const encryptedFile = fs.readFileSync(downloadPath);
 
       const fileDecrypted = crypt.decrypt(
@@ -100,6 +98,8 @@ export default async (req, res) => {
         fileDecrypted.signature,
         fileDecrypted.message
       );
+
+      res.send("stage4");
 
       if (!verify) {
         // If the file isn't signed, respond with an unauthorized request and do not send back the file.

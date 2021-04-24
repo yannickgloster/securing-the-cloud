@@ -87,13 +87,13 @@ export default async (req, res) => {
         encryptedFile.toString()
       );
 
+      res.send("stage3.5");
+
       const group = await prisma.group.findUnique({
         where: {
           id: parseInt(groupID),
         },
       });
-
-      res.send("stage3.7");
 
       const verify = crypt.verify(
         group.publicKey,

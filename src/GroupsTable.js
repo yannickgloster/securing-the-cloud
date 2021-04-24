@@ -143,7 +143,7 @@ export default function GroupsTable() {
         <Table aria-label="Groups">
           <TableHead>
             <TableRow>
-              <TableCell align="right">Name</TableCell>
+              <TableCell align="left">Name</TableCell>
               <TableCell align="right">Users</TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
@@ -157,7 +157,7 @@ export default function GroupsTable() {
                 // Get onhover vibe
               >
                 <TableCell
-                  align="right"
+                  align="left"
                   onClick={() => {
                     console.log("Clicked " + group.name);
                   }}

@@ -41,7 +41,7 @@ export default function Index() {
           account.
         </Typography>
         <Typography variant="body1" gutterBottom>
-          1.3. The Public & encrypted private user key are stored with the
+          1.3. The public & encrypted private user key are stored with the
           user's account.
         </Typography>
         <Typography variant="body1" gutterBottom>
@@ -54,7 +54,7 @@ export default function Index() {
       </Typography>
       <Box ml={10}>
         <Typography variant="body1" gutterBottom>
-          2.1. Public and private Keys are created for the group.
+          2.1. Public and private keys are created for the group.
         </Typography>
         <Typography variant="body1" gutterBottom>
           2.2. The group private key is encrypted with the owner's public key

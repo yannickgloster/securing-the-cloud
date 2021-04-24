@@ -18,6 +18,10 @@ export default async (req, res) => {
   const groupID = req.query.params[0];
   const fileID = req.query.params[1];
 
+  if (!fs.existsSync(path.join(process.cwd(), "downloads"))) {
+    fs.mkdirSync(path.join(process.cwd(), "downloads"));
+  }
+
   if (token) {
     try {
       // Decrypt the group private key from the logged in user. Use the public key of the user who is given access to encrypt the group private key

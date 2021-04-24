@@ -51,6 +51,8 @@ export default async (req, res) => {
         getPrivateKey.encryptedPrivateKey
       );
 
+      res.send("stage1");
+
       const fileInfo = await axios.get(
         "https://www.googleapis.com/drive/v3/files/" + fileID,
         {
@@ -59,6 +61,7 @@ export default async (req, res) => {
           },
         }
       );
+
       const downloadPath = path.join(
         os.tmpdir(),
         fileInfo.data.name + ".encrypted"
@@ -142,7 +145,8 @@ export default async (req, res) => {
         res.status(200);
       }
     } catch (e) {
-      res.status(401).send(e);
+      console.log(e);
+      res.status(401);
     }
   } else {
     // Not Signed in

@@ -16,6 +16,7 @@ import IconButton from "@material-ui/core/IconButton";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import DeleteIcon from "@material-ui/icons/Delete";
 import GetAppIcon from "@material-ui/icons/GetApp";
+import fileDownload from "js-file-download";
 
 import PageLayout from "../../src/PageLayout";
 
@@ -55,7 +56,13 @@ const group = () => {
 
   const downloadFile = async (id) => {
     try {
-      const downloadFile = await axios.get("/api/download/" + groupID + "/" + id);
+      const downloadFile = await axios.get(
+        "/api/download/" + groupID + "/" + id,
+        {
+          responseType: "blob",
+        }
+      );
+      fileDownload(downloadFile.data, downloadFile.headers.name);
     } catch (error) {
       console.log(error);
     }

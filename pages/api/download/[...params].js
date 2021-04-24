@@ -2,6 +2,7 @@ import jwt from "next-auth/jwt";
 import { getSession } from "next-auth/client";
 import axios from "axios";
 import fs from "fs";
+import path from "path";
 import { Crypt, RSA } from "hybrid-crypto-js";
 import { PrismaClient } from "@prisma/client";
 
@@ -51,8 +52,12 @@ export default async (req, res) => {
           },
         }
       );
-      const path = "./downloads/" + fileInfo.data.name + ".encrypted";
-      const location = fs.createWriteStream(path);
+      const downloadPath = path.join(
+        process.cwd(),
+        "downloads",
+        fileInfo.data.name + ".encrypted"
+      );
+      const location = fs.createWriteStream(downloadPath);
       const file = await axios.get(
         "https://www.googleapis.com/drive/v3/files/" + fileID + "?alt=media",
 
@@ -65,23 +70,46 @@ export default async (req, res) => {
       );
       file.data.pipe(location);
 
-      console.log(path);
-
       // Please fix this you stupid
       await sleep(1000);
 
-      const encryptedFile = fs.readFileSync(path);
+      const encryptedFile = fs.readFileSync(downloadPath);
 
       const fileDecrypted = crypt.decrypt(
         privateKeyDecrypted.message,
         encryptedFile.toString()
       );
 
-      fs.writeFileSync(
-        "./downloads/" + fileInfo.data.name,
-        fileDecrypted.message,
-        "hex"
+      const decryptedFilePath = path.join(
+        process.cwd(),
+        "downloads",
+        fileInfo.data.name
       );
+
+      fs.writeFileSync(decryptedFilePath, fileDecrypted.message, "hex");
+
+      res.setHeader("Content-Type", fileInfo.data.mimeType);
+      res.setHeader("Name", fileInfo.data.name);
+      const decryptedBuffer = fs.readFileSync(decryptedFilePath);
+      res.send(decryptedBuffer);
+
+      // Delete File
+      fs.unlink(downloadPath, (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        // File removed
+      });
+
+      // Delete File
+      fs.unlink(decryptedFilePath, (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        // File removed
+      });
 
       res.status(200);
     } catch (e) {

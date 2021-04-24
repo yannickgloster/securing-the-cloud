@@ -73,7 +73,7 @@ model Group {
   id              Int               @id @default(autoincrement())
   name            String
   folderID        String            @unique @map(name: "folder_id")
-  publicKey       String
+  publicKey       String            @db.MediumText
   users           User[]
   owner           User              @relation(name: "UserOwner", fields: [ownerId], references: [id])
   ownerId         Int

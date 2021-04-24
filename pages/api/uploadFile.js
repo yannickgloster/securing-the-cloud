@@ -2,12 +2,12 @@ import jwt from "next-auth/jwt";
 import multer from "multer";
 import axios from "axios";
 import fs from "fs";
-import path from "path";
 import { getSession } from "next-auth/client";
 import { PrismaClient } from "@prisma/client";
 import { Crypt, RSA } from "hybrid-crypto-js";
 import aes from "crypto-js/aes";
 import Utf8 from "crypto-js/enc-utf8";
+import os from "os";
 
 const secret = process.env.SECRET;
 
@@ -19,7 +19,7 @@ export const config = {
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(process.cwd(), "uploads"));
+    cb(null, os.tmpdir());
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);

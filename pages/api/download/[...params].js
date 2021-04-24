@@ -7,6 +7,7 @@ import { Crypt } from "hybrid-crypto-js";
 import { PrismaClient } from "@prisma/client";
 import aes from "crypto-js/aes";
 import Utf8 from "crypto-js/enc-utf8";
+import os from "os";
 
 const secret = process.env.SECRET;
 const crypt = new Crypt();
@@ -17,10 +18,6 @@ export default async (req, res) => {
   const session = await getSession({ req });
   const groupID = req.query.params[0];
   const fileID = req.query.params[1];
-
-  if (!fs.existsSync(path.join(process.cwd(), "downloads"))) {
-    fs.mkdirSync(path.join(process.cwd(), "downloads"));
-  }
 
   if (token) {
     try {
@@ -63,8 +60,7 @@ export default async (req, res) => {
         }
       );
       const downloadPath = path.join(
-        process.cwd(),
-        "downloads",
+        os.tmpdir(),
         fileInfo.data.name + ".encrypted"
       );
       const location = fs.createWriteStream(downloadPath);
@@ -116,11 +112,7 @@ export default async (req, res) => {
 
         res.status(401);
       } else {
-        const decryptedFilePath = path.join(
-          process.cwd(),
-          "downloads",
-          fileInfo.data.name
-        );
+        const decryptedFilePath = path.join(os.tmpdir(), fileInfo.data.name);
 
         fs.writeFileSync(decryptedFilePath, fileDecrypted.message, "hex");
 

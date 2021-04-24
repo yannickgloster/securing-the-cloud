@@ -33,6 +33,8 @@ CREATE TABLE "users" (
     "image" TEXT,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "publicKey" TEXT,
+    "encryptedPrivateKey" TEXT,
     "folder_id" TEXT
 );
 
@@ -50,7 +52,21 @@ CREATE TABLE "verification_requests" (
 CREATE TABLE "Group" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
-    "folder_id" TEXT NOT NULL
+    "folder_id" TEXT NOT NULL,
+    "publicKey" TEXT NOT NULL,
+    "ownerId" INTEGER NOT NULL,
+    FOREIGN KEY ("ownerId") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "GroupPrivateKey" (
+    "encryptedPrivateKey" TEXT NOT NULL,
+    "groupId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+
+    PRIMARY KEY ("groupId", "userId"),
+    FOREIGN KEY ("groupId") REFERENCES "Group" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable

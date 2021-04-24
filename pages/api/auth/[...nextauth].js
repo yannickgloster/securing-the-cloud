@@ -6,7 +6,8 @@ import axios from "axios";
 
 import { PrismaClient } from "@prisma/client";
 
-import { Crypt, RSA } from "hybrid-crypto-js";
+import { RSA } from "hybrid-crypto-js";
+import aes from "crypto-js/aes";
 
 const prisma = new PrismaClient();
 const rsa = new RSA();
@@ -42,13 +43,16 @@ export default NextAuth({
               },
             }
           );
+
           rsa.generateKeyPair(async function (keyPair) {
             await prisma.user.update({
               where: { id: user.id },
               data: {
                 folderID: folder.data.id,
                 publicKey: keyPair.publicKey,
-                privateKey: keyPair.privateKey,
+                encryptedPrivateKey: aes
+                  .encrypt(keyPair.privateKey, account.accessToken)
+                  .toString(),
               },
             });
           });

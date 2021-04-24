@@ -47,8 +47,8 @@ model User {
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
 
-  publicKey  String?
-  privateKey String?
+  publicKey           String?
+  encryptedPrivateKey String?
 
   groupKeys GroupPrivateKey[]
 

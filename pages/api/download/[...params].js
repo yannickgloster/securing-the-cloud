@@ -3,11 +3,12 @@ import { getSession } from "next-auth/client";
 import axios from "axios";
 import fs from "fs";
 import path from "path";
-import { Crypt, RSA } from "hybrid-crypto-js";
+import { Crypt } from "hybrid-crypto-js";
 import { PrismaClient } from "@prisma/client";
+import aes from "crypto-js/aes";
+import Utf8 from "crypto-js/enc-utf8";
 
 const secret = process.env.SECRET;
-const rsa = new RSA();
 const crypt = new Crypt();
 const prisma = new PrismaClient();
 
@@ -33,8 +34,19 @@ export default async (req, res) => {
         where: { id: session.user.id },
       });
 
+      // Decrypt user Private Key
+      const userAccount = await prisma.account.findFirst({
+        where: { userId: session.user.id, providerId: "google" },
+      });
+
+      const bytes = aes.decrypt(
+        currentUser.encryptedPrivateKey,
+        userAccount.accessToken
+      );
+      const decryptedUserPrivateKey = bytes.toString(Utf8);
+
       const privateKeyDecrypted = crypt.decrypt(
-        currentUser.privateKey,
+        decryptedUserPrivateKey,
         getPrivateKey.encryptedPrivateKey
       );
 

@@ -1,32 +1,22 @@
 import jwt from "next-auth/jwt";
 import axios from "axios";
-import { Crypt, RSA } from "hybrid-crypto-js";
+import aes from "crypto-js/aes";
+import Utf8 from "crypto-js/enc-utf8";
 
 const secret = process.env.SECRET;
-const rsa = new RSA();
-const crypt = new Crypt();
 
 export default async (req, res) => {
   const token = await jwt.getToken({ req, secret });
 
-  var rsa = new RSA();
+  // Encrypt
+  var ciphertext = aes.encrypt("my message", "secret key 123").toString();
+  console.log(ciphertext);
 
-  rsa.generateKeyPair(function (keyPair) {
-    // Callback function receives new key pair as a first argument
-    var publicKey1 = keyPair.publicKey;
-    var privateKey1 = keyPair.privateKey;
-    rsa.generateKeyPair(function (keyPair) {
-      // Callback function receives new key pair as a first argument
-      var publicKey2 = keyPair.publicKey;
-      var privateKey2 = keyPair.privateKey;
-      var message = "Hello world!";
-      var encrypted = crypt.encrypt([publicKey1, publicKey2], message);
-      console.log(encrypted);
-      var decrypted = crypt.decrypt(privateKey1, encrypted);
+  // Decrypt
+  var bytes = aes.decrypt(ciphertext, "secret key 123");
+  var originalText = bytes.toString(Utf8);
 
-      console.log(decrypted);
-    });
-  });
+  console.log(originalText); // 'my message'
 
   if (token) {
     try {

@@ -86,6 +86,34 @@ export default async (req, res) => {
         encryptedFile.toString()
       );
 
+      const group = await prisma.group.findUnique({
+        where: {
+          id: parseInt(groupID),
+        },
+      });
+
+      const verify = crypt.verify(
+        group.publicKey,
+        fileDecrypted.signature,
+        fileDecrypted.message
+      );
+
+      if (!verify) {
+        // If the file isn't signed, respond with an unauthorized request and do not send back the file.
+
+        // Delete File
+        fs.unlink(downloadPath, (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          // File removed
+        });
+
+        res.status(401);
+        res.end();
+      }
+
       const decryptedFilePath = path.join(
         process.cwd(),
         "downloads",

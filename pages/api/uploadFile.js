@@ -6,6 +6,8 @@ import path from "path";
 import { getSession } from "next-auth/client";
 import { PrismaClient } from "@prisma/client";
 import { Crypt, RSA } from "hybrid-crypto-js";
+import aes from "crypto-js/aes";
+import Utf8 from "crypto-js/enc-utf8";
 
 const secret = process.env.SECRET;
 
@@ -45,11 +47,40 @@ export default async (req, res) => {
     try {
       upload.single("file")(req, {}, async (err) => {
         // Encrypt Files
-        const file = fs.readFileSync(req.file.path);
-        const encryptedFile = crypt.encrypt(
-          group.publicKey,
-          file.toString("hex")
+        // Decrypt the group private key from the logged in user. Use the public key of the user who is given access to encrypt the group private key
+        const getPrivateKey = await prisma.groupPrivateKey.findUnique({
+          where: {
+            groupId_userId: {
+              groupId: parseInt(req.headers.groupid),
+              userId: session.user.id,
+            },
+          },
+        });
+
+        const currentUser = await prisma.user.findUnique({
+          where: { id: session.user.id },
+        });
+
+        // Decrypt user Private Key
+        const userAccount = await prisma.account.findFirst({
+          where: { userId: session.user.id, providerId: "google" },
+        });
+
+        const bytes = aes.decrypt(
+          currentUser.encryptedPrivateKey,
+          userAccount.accessToken
         );
+        const decryptedUserPrivateKey = bytes.toString(Utf8);
+
+        const privateKeyDecrypted = crypt.decrypt(
+          decryptedUserPrivateKey,
+          getPrivateKey.encryptedPrivateKey
+        );
+
+        const file = fs.readFileSync(req.file.path).toString("hex");
+        const signature = crypt.signature(privateKeyDecrypted.message, file);
+
+        const encryptedFile = crypt.encrypt(group.publicKey, file, signature);
         const encryptedFileBuffer = Buffer.from(encryptedFile);
 
         // Upload Metadata

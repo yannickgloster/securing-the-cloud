@@ -11,7 +11,7 @@ Securing the Cloud is a secure cloud storage application which secures files sto
 1. Install [Node.js](https://nodejs.org)
 2. Clone this repository
 3. Rename `.env.example` to `.env.local` and fill in the config
-   1. Get [Google API token and App](https://console.cloud.google.com/apis/credentials) with Scopes:
+   1. Get [Google API token and App](https://console.cloud.google.com/apis/credentials) with scopes:
       ```
       https://www.googleapis.com/auth/userinfo.profile
       https://www.googleapis.com/auth/userinfo.email

@@ -111,41 +111,40 @@ export default async (req, res) => {
         });
 
         res.status(401);
-        res.end();
+      } else {
+        const decryptedFilePath = path.join(
+          process.cwd(),
+          "downloads",
+          fileInfo.data.name
+        );
+
+        fs.writeFileSync(decryptedFilePath, fileDecrypted.message, "hex");
+
+        res.setHeader("Content-Type", fileInfo.data.mimeType);
+        res.setHeader("Name", fileInfo.data.name);
+        const decryptedBuffer = fs.readFileSync(decryptedFilePath);
+        res.send(decryptedBuffer);
+
+        // Delete File
+        fs.unlink(downloadPath, (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          // File removed
+        });
+
+        // Delete File
+        fs.unlink(decryptedFilePath, (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          // File removed
+        });
+
+        res.status(200);
       }
-
-      const decryptedFilePath = path.join(
-        process.cwd(),
-        "downloads",
-        fileInfo.data.name
-      );
-
-      fs.writeFileSync(decryptedFilePath, fileDecrypted.message, "hex");
-
-      res.setHeader("Content-Type", fileInfo.data.mimeType);
-      res.setHeader("Name", fileInfo.data.name);
-      const decryptedBuffer = fs.readFileSync(decryptedFilePath);
-      res.send(decryptedBuffer);
-
-      // Delete File
-      fs.unlink(downloadPath, (err) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        // File removed
-      });
-
-      // Delete File
-      fs.unlink(decryptedFilePath, (err) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        // File removed
-      });
-
-      res.status(200);
     } catch (e) {
       console.log(e);
       res.status(401);

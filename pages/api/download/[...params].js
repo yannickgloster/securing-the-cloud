@@ -110,7 +110,7 @@ export default async (req, res) => {
           // File removed
         });
 
-        res.status(401);
+        res.status(400);
       } else {
         const decryptedFilePath = path.join(os.tmpdir(), fileInfo.data.name);
 

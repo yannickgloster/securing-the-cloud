@@ -119,7 +119,6 @@ const group = () => {
               <TableCell></TableCell>
               <TableCell align="right">Name</TableCell>
               <TableCell align="right">Type</TableCell>
-              <TableCell align="right">Encrypted</TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
             </TableRow>
@@ -132,7 +131,6 @@ const group = () => {
                 </TableCell>
                 <TableCell align="right">{file.name}</TableCell>
                 <TableCell align="right">{file.mimeType}</TableCell>
-                <TableCell align="right">No</TableCell>
                 <TableCell component="th" scope="row" padding="checkbox">
                   <IconButton onClick={() => deleteFile(file.id)}>
                     <DeleteIcon />

@@ -47,8 +47,8 @@ model User {
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
 
-  publicKey           String?
-  encryptedPrivateKey String?
+  publicKey           String? @db.MediumText
+  encryptedPrivateKey String? @db.MediumText
 
   groupKeys GroupPrivateKey[]
 
@@ -81,7 +81,7 @@ model Group {
 }
 
 model GroupPrivateKey {
-  encryptedPrivateKey String
+  encryptedPrivateKey String @db.MediumText
   group               Group  @relation(fields: [groupId], references: [id])
   groupId             Int
   user                User   @relation(fields: [userId], references: [id])

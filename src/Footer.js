@@ -8,7 +8,7 @@ export default function Footer() {
     <Typography variant="body2" color="textSecondary" align="center">
       {"Built By "}
       <MuiLink
-        color="default"
+        color="initial"
         href="https://yannickgloster.com/"
         target="_blank"
       >
@@ -16,7 +16,7 @@ export default function Footer() {
       </MuiLink>{" "}
       {"for the "}
       <MuiLink
-        color="default"
+        color="initial"
         href="https://teaching.scss.tcd.ie/module/csu34031-advanced-telecommunications/"
         target="_blank"
       >

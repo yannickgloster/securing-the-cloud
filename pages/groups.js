@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import Button from "@material-ui/core/Button";
@@ -20,6 +20,9 @@ import GroupsTable from "../src/GroupsTable";
 export default function Groups() {
   const [dialog, setDialog] = useState(false);
   const [groupName, setGroupName] = useState("");
+  const [updated, setUpdated] = useState(false);
+
+  useEffect(() => {}, [updated]);
 
   const openDialog = () => {
     setDialog(true);
@@ -34,17 +37,21 @@ export default function Groups() {
     setGroupName(event.target.value);
   };
 
-  const addGroup = () => {
-    axios.post("/api/groups/create", {
-      name: groupName,
-    });
+  const addGroup = async () => {
+    try {
+      await axios.post("/api/groups/create", {
+        name: groupName,
+      });
+      setUpdated(!updated);
+    } catch (e) {}
+
     closeDialog();
   };
 
   return (
     <PageLayout>
-      <Box display="flex"  alignItems="center">
-        <Box flexGrow={1} m={1} >
+      <Box display="flex" alignItems="center">
+        <Box flexGrow={1} m={1}>
           <Typography variant="h3" component="h3">
             Groups
           </Typography>
@@ -57,9 +64,7 @@ export default function Groups() {
           </Tooltip>
         </Box>
       </Box>
-      <GroupsTable
-      // Get this component to update when a new thing is added
-      />
+      <GroupsTable />
 
       <Dialog
         open={dialog}

@@ -43,8 +43,8 @@ export default function Groups() {
 
   return (
     <PageLayout>
-      <Box display="flex">
-        <Box flexGrow={1}>
+      <Box display="flex"  alignItems="center">
+        <Box flexGrow={1} m={1} >
           <Typography variant="h3" component="h3">
             Groups
           </Typography>

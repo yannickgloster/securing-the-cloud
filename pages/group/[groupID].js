@@ -35,7 +35,7 @@ const group = () => {
 
   const getFiles = async () => {
     try {
-      const path = "/api/GetFiles/" + groupID;
+      const path = "/api/getFiles/" + groupID;
       const filesReq = await axios.get(path);
       setFiles(filesReq.data.files);
       setGroupName(filesReq.data.name);
@@ -46,7 +46,7 @@ const group = () => {
 
   const deleteFile = async (id) => {
     try {
-      const filesReq = await axios.delete("/api/DeleteFile", {
+      const filesReq = await axios.delete("/api/deleteFile", {
         data: { id: id },
       });
     } catch (error) {
@@ -76,7 +76,7 @@ const group = () => {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      await axios.post("/api/UploadFiles", formData, {
+      await axios.post("/api/uploadFile", formData, {
         headers: {
           "content-type": "multipart/form-data",
           groupID: groupID,

@@ -35,7 +35,7 @@ export default function Groups() {
   };
 
   const addGroup = () => {
-    axios.post("/api/groups/Create", {
+    axios.post("/api/groups/create", {
       name: groupName,
     });
     closeDialog();

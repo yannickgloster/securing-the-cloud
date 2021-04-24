@@ -55,7 +55,7 @@ export default function GroupsTable() {
 
   const getGroups = async () => {
     try {
-      const groupsReq = await axios.get("/api/groups/GetAll");
+      const groupsReq = await axios.get("/api/groups/all");
       setGroups(groupsReq.data);
     } catch (error) {
       console.log(error);
@@ -66,7 +66,7 @@ export default function GroupsTable() {
 
   const deleteGroup = async (group) => {
     try {
-      const groupDel = await axios.delete("/api/groups/Delete", {
+      const groupDel = await axios.delete("/api/groups/delete", {
         data: group,
       });
       getGroups();
@@ -95,7 +95,7 @@ export default function GroupsTable() {
   const addUserToGroup = async () => {
     try {
       const groupAddUser = await axios
-        .put("/api/groups/AddUser", {
+        .put("/api/groups/addUser", {
           group: groupSelected,
           userEmail: addUser,
         })
@@ -123,7 +123,7 @@ export default function GroupsTable() {
 
   const removeUser = async (user, group) => {
     try {
-      const removeUser = await axios.delete("/api/groups/RemoveUser", {
+      const removeUser = await axios.delete("/api/groups/removeUser", {
         data: {
           user: user,
           group: group,

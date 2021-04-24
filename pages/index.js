@@ -64,7 +64,7 @@ export default function Index() {
           private key is stored with the user and links back to the group.
         </Typography>
         <Typography variant="body1" gutterBottom>
-          2.3. The group folder is created in the owner's folder and the group
+          2.4. The group folder is created in the owner's folder and the group
           folder ID is stored with the group.
         </Typography>
       </Box>
@@ -85,7 +85,7 @@ export default function Index() {
           that is being added.
         </Typography>
         <Typography variant="body1" gutterBottom>
-          3.3. The group folder is shared with the user through Google Drive
+          3.4. The group folder is shared with the user through Google Drive
         </Typography>
       </Box>
       <Typography variant="body1" gutterBottom>

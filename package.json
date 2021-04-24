@@ -10,6 +10,7 @@
     "axios": "^0.21.1",
     "clsx": "latest",
     "crypto-js": "^4.0.0",
+    "fontsource-roboto": "^4.0.0",
     "hybrid-crypto-js": "^0.2.4",
     "js-file-download": "^0.4.12",
     "multer": "^1.4.2",

@@ -82,12 +82,12 @@ export default async (req, res) => {
 
       const encryptedFile = fs.readFileSync(downloadPath);
 
+      res.send("stage3.2");
+
       const fileDecrypted = crypt.decrypt(
         privateKeyDecrypted.message,
         encryptedFile.toString()
       );
-
-      res.send("stage3.5");
 
       const group = await prisma.group.findUnique({
         where: {

@@ -152,6 +152,7 @@ const group = () => {
                 component="span"
                 variant="contained"
                 onClick={uploadFile}
+                disabled={!file}
               >
                 <CloudUploadIcon style={{ marginRight: "2px" }} />
                 <Typography variant="button">Upload</Typography>

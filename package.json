@@ -25,6 +25,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start -p $PORT",
+    "heroku-postbuild": "npm run build",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
   },
   "devDependencies": {

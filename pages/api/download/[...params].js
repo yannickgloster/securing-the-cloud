@@ -10,6 +10,7 @@ import Utf8 from "crypto-js/enc-utf8";
 import os from "os";
 
 const secret = process.env.SECRET;
+const crypt = new Crypt();
 const prisma = new PrismaClient();
 
 export default async (req, res) => {
@@ -17,7 +18,6 @@ export default async (req, res) => {
   const session = await getSession({ req });
   const groupID = req.query.params[0];
   const fileID = req.query.params[1];
-  const crypt = new Crypt();
 
   if (token) {
     try {
@@ -83,6 +83,12 @@ export default async (req, res) => {
       const encryptedFile = fs.readFileSync(downloadPath);
 
       // Broken on vercel
+
+      res.json({
+        key: privateKeyDecrypted.message,
+        encryptedFile: encryptedFile.toString(),
+      });
+
       const fileDecrypted = crypt.decrypt(
         privateKeyDecrypted.message,
         encryptedFile.toString()

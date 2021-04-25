@@ -84,7 +84,7 @@ export default async (req, res) => {
 
       const fileDecrypted = crypt.decrypt(
         privateKeyDecrypted.message,
-        encryptedFile.toJSON()
+        encryptedFile.toString()
       );
 
       const group = await prisma.group.findUnique({

@@ -36,6 +36,7 @@ const group = () => {
   const [errorStatus, setErrorStatus] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [firstLoad, setFirstLoad] = useState(true);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(getFiles, 1000);
@@ -91,6 +92,7 @@ const group = () => {
   const uploadFile = async () => {
     const formData = new FormData();
     formData.append("file", file);
+    setUploading(true);
     try {
       await axios.post("/api/uploadFile", formData, {
         headers: {
@@ -98,6 +100,7 @@ const group = () => {
           groupID: groupID,
         },
       });
+      setUploading(false);
     } catch (error) {
       console.log(error);
       setErrorStatus(true);
@@ -158,6 +161,11 @@ const group = () => {
                 <Typography variant="button">Upload</Typography>
               </Button>
             </Box>
+            {uploading && (
+              <Box m={1}>
+                <CircularProgress />
+              </Box>
+            )}
           </Box>
           <TableContainer component={Paper}>
             <Table aria-label="Files">

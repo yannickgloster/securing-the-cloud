@@ -82,10 +82,12 @@ export default async (req, res) => {
 
       const encryptedFile = fs.readFileSync(downloadPath);
 
+      // Broken on vercel
       const fileDecrypted = crypt.decrypt(
         privateKeyDecrypted.message,
         encryptedFile.toString()
       );
+      console.warn(fileDecrypted);
 
       const group = await prisma.group.findUnique({
         where: {

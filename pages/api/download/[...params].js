@@ -10,7 +10,6 @@ import Utf8 from "crypto-js/enc-utf8";
 import os from "os";
 
 const secret = process.env.SECRET;
-const crypt = new Crypt();
 const prisma = new PrismaClient();
 
 export default async (req, res) => {
@@ -18,6 +17,7 @@ export default async (req, res) => {
   const session = await getSession({ req });
   const groupID = req.query.params[0];
   const fileID = req.query.params[1];
+  const crypt = new Crypt();
 
   if (token) {
     try {
@@ -87,7 +87,6 @@ export default async (req, res) => {
         privateKeyDecrypted.message,
         encryptedFile.toString()
       );
-      console.warn(fileDecrypted);
 
       const group = await prisma.group.findUnique({
         where: {

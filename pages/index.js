@@ -34,7 +34,7 @@ export default function Index() {
       </Typography>
       <Box ml={10}>
         <Typography variant="body1" gutterBottom>
-          1.1. Public and private Keys are created for the user.
+          1.1. Public and private keys are created for the user.
         </Typography>
         <Typography variant="body1" gutterBottom>
           1.2. The user's private key is encrypted with AES with the user's
@@ -101,7 +101,7 @@ export default function Index() {
         </Typography>
       </Box>
       <Typography variant="body1" gutterBottom>
-        5. File Uploaded
+        5. File upload
       </Typography>
       <Box ml={10}>
         <Typography variant="body1" gutterBottom>
@@ -112,7 +112,7 @@ export default function Index() {
         </Typography>
       </Box>
       <Typography variant="body1" gutterBottom>
-        6. File Download
+        6. File download
       </Typography>
       <Box ml={10}>
         <Typography variant="body1" gutterBottom>

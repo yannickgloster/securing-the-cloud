@@ -31,7 +31,7 @@ export default async (req, res) => {
       );
 
       rsa.generateKeyPair(async function (keyPair) {
-        // Create group and store private key in group
+        // Create group and store public key in group
         const createGroup = await prisma.group.create({
           data: {
             name: req.body.name,

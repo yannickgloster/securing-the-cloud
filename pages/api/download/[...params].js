@@ -64,6 +64,7 @@ export default async (req, res) => {
         os.tmpdir(),
         fileInfo.data.name + ".encrypted"
       );
+
       const location = fs.createWriteStream(downloadPath);
       const file = await axios.get(
         "https://www.googleapis.com/drive/v3/files/" + fileID + "?alt=media",
@@ -80,12 +81,12 @@ export default async (req, res) => {
         file.data.on("end", resolve);
       });
 
-      const encryptedFile = fs.readFileSync(downloadPath);
+      const encryptedFile = await fs.promises.readFile(downloadPath);
+      const encryptedFileString = encryptedFile.toString();
 
-      // Broken on vercel
       const fileDecrypted = crypt.decrypt(
         privateKeyDecrypted.message,
-        encryptedFile.toString()
+        encryptedFileString
       );
 
       const group = await prisma.group.findUnique({
@@ -116,11 +117,15 @@ export default async (req, res) => {
       } else {
         const decryptedFilePath = path.join(os.tmpdir(), fileInfo.data.name);
 
-        fs.writeFileSync(decryptedFilePath, fileDecrypted.message, "hex");
+        await fs.promises.writeFile(
+          decryptedFilePath,
+          fileDecrypted.message,
+          "hex"
+        );
 
         res.setHeader("Content-Type", fileInfo.data.mimeType);
         res.setHeader("Name", fileInfo.data.name);
-        const decryptedBuffer = fs.readFileSync(decryptedFilePath);
+        const decryptedBuffer = await fs.promises.readFile(decryptedFilePath);
         res.send(decryptedBuffer);
 
         // Delete File

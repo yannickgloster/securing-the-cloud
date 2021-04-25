@@ -77,9 +77,15 @@ export default async (req, res) => {
           getPrivateKey.encryptedPrivateKey
         );
 
-        const file = fs.readFileSync(req.file.path).toString("hex");
-        const signature = crypt.signature(privateKeyDecrypted.message, file);
-        const encryptedFile = crypt.encrypt(group.publicKey, file, signature);
+        const file = await fs.promises.readFile(req.file.path);
+        const hexFile = file.toString("hex");
+        const signature = crypt.signature(privateKeyDecrypted.message, hexFile);
+        const encryptedFile = crypt.encrypt(
+          group.publicKey,
+          hexFile,
+          signature
+        );
+
         const encryptedFileBuffer = Buffer.from(encryptedFile);
 
         // Upload Metadata

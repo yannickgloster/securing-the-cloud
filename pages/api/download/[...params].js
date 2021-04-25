@@ -84,11 +84,6 @@ export default async (req, res) => {
 
       // Broken on vercel
 
-      res.json({
-        key: privateKeyDecrypted.message,
-        encryptedFile: encryptedFile.toString(),
-      });
-
       const fileDecrypted = crypt.decrypt(
         privateKeyDecrypted.message,
         encryptedFile.toString()
